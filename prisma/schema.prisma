@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String    @id @default(uuid())
+  created_at DateTime  @default(now())
+  username   String    @unique
+  password   String
+  Earning    Earning[]
+  Debt       Debt[]
+  Debtor     Debtor[]
+  Budget     Budget[]
+
+  @@map("users")
+}
+
+model Earning {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  name       String
+  value      Decimal
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  @@map("earnings")
+}
+
+model Debt {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  name       String
+  value      Decimal
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  @@map("debts")
+}
+
+model Debtor {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  name       String
+  value      Decimal
+  phone      String?
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  @@map("debtors")
+}
+
+model Budget {
+  id          String   @id @default(uuid())
+  created_at  DateTime @default(now())
+  name        String
+  value       Decimal
+  phone       String?
+  type        String
+  description String?
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  @@map("budgets")
+}
