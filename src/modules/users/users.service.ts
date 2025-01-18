@@ -1,8 +1,10 @@
 import { Prisma } from '@prisma/client';
 
 import { Injectable } from '@nestjs/common';
-import { genSaltSync, hashSync } from 'bcrypt';
+import { compareSync, genSaltSync, hashSync } from 'bcrypt';
+import { JWT } from 'src/lib/JWT';
 import ErrorResponse from 'src/lib/responseMessage';
+import { TUserLoginData } from './types';
 import { UsersRepository } from './users.repository';
 
 @Injectable()
@@ -25,5 +27,33 @@ export class UsersService {
       ...data,
       password: hash,
     });
+  }
+
+  async login(data: TUserLoginData) {
+    const user = await this.repository.unique({
+      username: data.username,
+    });
+
+    if (!user) {
+      throw ErrorResponse.throw(
+        `Usuário ${data.username} ainda não foi cadastrado!`,
+      );
+    }
+
+    const passwordVerify = compareSync(data.password, user.password);
+
+    if (!passwordVerify) {
+      throw ErrorResponse.throw(`Senha incorreta!`);
+    }
+
+    const token = JWT.generateToken(process.env.JWT_SECRET, user.id, {
+      id: user.id,
+      username: data.username,
+    });
+
+    return {
+      token,
+      username: user.username,
+    };
   }
 }
