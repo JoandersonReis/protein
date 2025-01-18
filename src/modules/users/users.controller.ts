@@ -17,7 +17,7 @@ export class UsersController {
 
       return response.json().status(201);
     } catch (err) {
-      return response.json(err[0]).status(err[1]);
+      return response.status(err[1]).json(err[0]);
     }
   }
 }
