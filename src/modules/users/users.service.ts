@@ -2,6 +2,7 @@ import { Prisma } from '@prisma/client';
 
 import { Injectable } from '@nestjs/common';
 import { compareSync, genSaltSync, hashSync } from 'bcrypt';
+import { ENV } from 'src/lib/config';
 import { JWT } from 'src/lib/JWT';
 import ErrorResponse from 'src/lib/responseMessage';
 import { TUserLoginData } from './types';
@@ -46,7 +47,7 @@ export class UsersService {
       throw ErrorResponse.throw(`Senha incorreta!`);
     }
 
-    const token = JWT.generateToken(process.env.JWT_SECRET, user.id, {
+    const token = JWT.generateToken(ENV.jtwSecret, user.id, {
       id: user.id,
       username: data.username,
     });

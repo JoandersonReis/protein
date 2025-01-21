@@ -1,5 +1,6 @@
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 import { JWT_EXPIRE } from './config';
+import ErrorResponse from './responseMessage';
 
 export class JWT {
   static generateToken(secret: string, subject: string, payload?: Object) {
@@ -9,5 +10,15 @@ export class JWT {
     });
 
     return token;
+  }
+
+  static verifyToken(secret: string, token: string) {
+    const payload = verify(token, secret);
+
+    if (!payload) {
+      throw ErrorResponse.throw('Invalid token', 401);
+    }
+
+    return payload;
   }
 }
