@@ -14,67 +14,70 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  created_at DateTime  @default(now())
-  username   String    @unique
-  password   String
-  Earning    Earning[]
-  Debt       Debt[]
-  Debtor     Debtor[]
-  Budget     Budget[]
+  id           String         @id @default(uuid())
+  created_at   DateTime       @default(now())
+  username     String         @unique
+  password     String
+  Diet         Diet[]
+  Schedule     Schedule[]
+  ScheduleFood ScheduleFood[]
 
   @@map("users")
 }
 
-model Earning {
-  id         String   @id @default(uuid())
-  created_at DateTime @default(now())
-  name       String
-  value      Decimal
-
-  user    User   @relation(fields: [user_id], references: [id])
-  user_id String
-
-  @@map("earnings")
-}
-
-model Debt {
-  id         String   @id @default(uuid())
-  created_at DateTime @default(now())
-  name       String
-  value      Decimal
-
-  user    User   @relation(fields: [user_id], references: [id])
-  user_id String
-
-  @@map("debts")
-}
-
-model Debtor {
-  id           String    @id @default(uuid())
-  created_at   DateTime  @default(now())
-  payment_date DateTime?
+model Food {
+  id           String         @id @default(uuid())
+  created_at   DateTime       @default(now())
   name         String
-  value        Decimal
-  phone        String?
+  calories     Decimal
+  fat          Decimal
+  carb         Decimal
+  ScheduleFood ScheduleFood[]
 
-  user    User   @relation(fields: [user_id], references: [id])
-  user_id String
-
-  @@map("debtors")
+  @@map("foods")
 }
 
-model Budget {
-  id          String   @id @default(uuid())
-  created_at  DateTime @default(now())
-  name        String
-  value       Decimal
-  phone       String?
-  type        String
-  description String?
+model Diet {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  name       String
+  mounth     Int
+
+  user     User       @relation(fields: [user_id], references: [id])
+  user_id  String
+  Schedule Schedule[]
+
+  @@map("diets")
+}
+
+model Schedule {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  date       DateTime
 
   user    User   @relation(fields: [user_id], references: [id])
   user_id String
 
-  @@map("budgets")
+  diet         Diet           @relation(fields: [diet_id], references: [id])
+  diet_id      String
+  ScheduleFood ScheduleFood[]
+
+  @@map("schedules")
+}
+
+model ScheduleFood {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  hour       Int
+
+  schedule    Schedule @relation(fields: [schedule_id], references: [id])
+  schedule_id String
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  food    Food   @relation(fields: [food_id], references: [id])
+  food_id String
+
+  @@map("schedules_foods")
 }
