@@ -6,7 +6,13 @@ import { JWT } from 'src/lib/JWT';
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   use(request: Request, response: Response, next: NextFunction) {
-    const accessToken = request.headers.authorization;
+    const [bearer, accessToken] = request.headers.authorization.split(' ');
+
+    if (!bearer) {
+      return response.status(401).json({
+        error_description: 'Token must been type Bearer',
+      });
+    }
 
     if (!accessToken) {
       return response.status(401).json({

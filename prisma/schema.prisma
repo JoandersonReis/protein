@@ -32,6 +32,7 @@ model Food {
   calories     Decimal
   fat          Decimal
   carb         Decimal
+  protein      Decimal
   ScheduleFood ScheduleFood[]
 
   @@map("foods")
