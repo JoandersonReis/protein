@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { Response } from 'express';
+import { Controller, Get, Post, Query, Req, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
+import { Validation } from 'src/lib/Validation';
+import { CreateFoodSchema } from 'src/lib/zodSchemas/foods.schema';
 import { FoodsService } from './foods.service';
 import { TShowQuery } from './types';
 
@@ -9,15 +10,18 @@ export class FoodsController {
   constructor(private readonly service: FoodsService) {}
 
   @Post('/foods')
-  async create(
-    @Body() body: Prisma.FoodCreateInput,
-    @Res() response: Response,
-  ) {
-    const food = await this.service.create(body);
+  async create(@Req() request: Request, @Res() response: Response) {
+    try {
+      Validation.validate(request, CreateFoodSchema);
 
-    return response.status(201).json({
-      food,
-    });
+      const food = await this.service.create(request.body);
+
+      return response.status(201).json({
+        food,
+      });
+    } catch (err) {
+      return response.status(err[1]).json(err[0]);
+    }
   }
 
   @Get('/foods')
