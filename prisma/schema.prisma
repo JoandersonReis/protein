@@ -18,6 +18,8 @@ model User {
   created_at   DateTime       @default(now())
   username     String         @unique
   password     String
+  rule         Int            @default(0)
+  premium      Int            @default(0)
   Diet         Diet[]
   Schedule     Schedule[]
   ScheduleFood ScheduleFood[]

@@ -3,5 +3,5 @@ export const JWT_EXPIRE = {
 };
 
 export const ENV = {
-  jtwSecret: String(process.env.JWT_SECRET),
+  jwtSecret: String(process.env.JWT_SECRET),
 };

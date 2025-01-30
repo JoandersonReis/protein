@@ -27,7 +27,7 @@ export class UsersController {
     try {
       const result = await this.service.login(body);
 
-      return response.json(result);
+      return response.status(200).json(result);
     } catch (err) {
       return response.status(err[1]).json(err[0]);
     }

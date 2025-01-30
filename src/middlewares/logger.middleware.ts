@@ -2,6 +2,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 import { ENV } from 'src/lib/config';
 import { JWT } from 'src/lib/JWT';
+import { TLoggerToken } from './types';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
@@ -21,9 +22,11 @@ export class LoggerMiddleware implements NestMiddleware {
     }
 
     try {
-      const payload = JWT.verifyToken(ENV.jtwSecret, accessToken);
+      const token = JWT.verifyToken(ENV.jwtSecret, accessToken) as TLoggerToken;
 
-      request.user_id = String(payload.sub);
+      request.user_id = token.sub;
+      request.user_rule = token.payload.rule;
+      request.user_premium = token.payload.premium;
 
       next();
     } catch (err) {

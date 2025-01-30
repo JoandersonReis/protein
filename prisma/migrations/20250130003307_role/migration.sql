@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "users" ADD COLUMN     "premium" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "role" INTEGER NOT NULL DEFAULT 0;

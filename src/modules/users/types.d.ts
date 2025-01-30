@@ -3,6 +3,8 @@ export type TUser = {
   created_at: Date;
   username: string;
   password: string;
+  rule: number;
+  premium: number;
 };
 
 export type TUserLoginData = {

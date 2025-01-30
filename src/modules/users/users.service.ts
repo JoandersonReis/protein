@@ -47,14 +47,18 @@ export class UsersService {
       throw ErrorResponse.throw(`Senha incorreta!`);
     }
 
-    const token = JWT.generateToken(ENV.jtwSecret, user.id, {
+    const token = JWT.generateToken(ENV.jwtSecret, user.id, {
       id: user.id,
       username: data.username,
+      rule: user.rule,
+      premiun: user.premium,
     });
 
     return {
       token,
       username: user.username,
+      rule: user.rule,
+      premium: user.premium,
     };
   }
 }
