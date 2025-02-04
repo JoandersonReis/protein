@@ -46,7 +46,7 @@ model Diet {
   name       String
   mounth     Int
 
-  user     User       @relation(fields: [user_id], references: [id])
+  user     User       @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user_id  String
   Schedule Schedule[]
 
@@ -58,10 +58,10 @@ model Schedule {
   created_at DateTime @default(now())
   date       DateTime
 
-  user    User   @relation(fields: [user_id], references: [id])
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user_id String
 
-  diet         Diet           @relation(fields: [diet_id], references: [id])
+  diet         Diet           @relation(fields: [diet_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   diet_id      String
   ScheduleFood ScheduleFood[]
 
@@ -73,13 +73,13 @@ model ScheduleFood {
   created_at DateTime @default(now())
   hour       Int
 
-  schedule    Schedule @relation(fields: [schedule_id], references: [id])
+  schedule    Schedule @relation(fields: [schedule_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   schedule_id String
 
-  user    User   @relation(fields: [user_id], references: [id])
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user_id String
 
-  food    Food   @relation(fields: [food_id], references: [id])
+  food    Food   @relation(fields: [food_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   food_id String
 
   @@map("schedules_foods")
