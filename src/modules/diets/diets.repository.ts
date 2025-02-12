@@ -19,4 +19,13 @@ export class DietRepository {
 
     return diets;
   }
+
+  async delete(id: string, userId: string) {
+    await prisma.diet.delete({
+      where: {
+        id,
+        user_id: userId,
+      },
+    });
+  }
 }
